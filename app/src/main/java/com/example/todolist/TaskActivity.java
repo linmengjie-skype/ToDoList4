@@ -25,7 +25,6 @@ public class TaskActivity extends AppCompatActivity {
     private Button btn;
     private DataBaseHelper dbHelper;
     private SQLiteDatabase db;
-    private ArrayList<String> taskList;
 
 
     @Override
@@ -33,24 +32,18 @@ public class TaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
         mContext = TaskActivity.this;
-        dbHelper = new DataBaseHelper(mContext);
-        taskList=taskList = new ArrayList<>();
-
+        dbHelper = new DataBaseHelper(this);
         editText = (EditText) findViewById(R.id.edit_text);
         btn = (Button) findViewById(R.id.btn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 db=dbHelper.getWritableDatabase();
-                switch (v.getId()){
-                    case R.id.btn:
+
                         ContentValues values=new ContentValues();
                         values.put("TaskName",editText.getText().toString());
                 }
 
-
-
-            }
         });
 
 
@@ -63,12 +56,14 @@ public class TaskActivity extends AppCompatActivity {
 
     }
     public ArrayList<String> getTaskList() {
-        taskList = new ArrayList<>();
+        ArrayList<String> taskList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query( "task.db", new String[]{"TaskName"}, null, null, null, null, null);
-        while (cursor.moveToNext()) {
-            int index = cursor.getColumnIndex("TaskName");
-            taskList.add(cursor.getString(index));
+        Cursor cursor = db.query( "task", new String[]{"TaskName"}, null, null, null, null, null);
+        if(cursor.moveToFirst()) {
+            while (cursor.moveToNext()) {
+                int index = cursor.getColumnIndex("TaskName");
+                taskList.add(cursor.getString(index));
+            }
         }
         cursor.close();
         db.close();
