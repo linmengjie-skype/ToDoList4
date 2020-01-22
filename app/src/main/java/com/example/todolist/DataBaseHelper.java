@@ -24,7 +24,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String query = String.format("CREATE TABLE %s(ID INTEGER PRIMARY KEY  AUTOINCREMENT,%s TEXT NOT NULL);", DB_TABLE, DB_COLUM);
+        String query = String.format("CREATE TABLE task (ID INTEGER PRIMARY KEY  AUTOINCREMENT,sql TEXT NOT NULL);", DB_TABLE, DB_COLUM);
         db.execSQL(query);
 
     }
@@ -42,10 +42,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put(DB_COLUM, task);
         db.insertWithOnConflict(DB_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
-
-    public void deleteTask(String task) {
+//
+//    public void deleteTask(String task) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        db.delete(DB_TABLE, DB_COLUM + "- ?", new String[]{task});
+//        db.close();
+//
+//    }
+    public void deleteTask(Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(DB_TABLE, DB_COLUM + "- ?", new String[]{task});
+        db.delete(DB_TABLE, "_id=?", new String[]{id.toString()});
         db.close();
 
     }
